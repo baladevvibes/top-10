@@ -19,13 +19,13 @@ export default function page() {
     title: "",
     tag: "",
     img: "",
-    schema:""
+    schema: "",
   });
   const [error, setError] = useState({
     title: "",
     tag: "",
     img: "",
-        schema:""
+    schema: "",
   });
   const [readyStatus, setReadyStatus] = useState(false);
   const [formFirstAction, setFormFirstAction] = useState(true);

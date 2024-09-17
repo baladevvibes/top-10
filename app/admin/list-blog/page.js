@@ -1,16 +1,13 @@
-"use client";
-import axios from "axios";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-// import { headers } from "next/headers";
-import React, { useEffect, useState } from "react";
-import { MdModeEditOutline } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
+"use client"
+import React, { useEffect, useState } from 'react'
+import Layout from '../Layout'
+import { AiTwotoneHome } from 'react-icons/ai';
+import { MdDelete, MdModeEditOutline, MdOutlineKeyboardDoubleArrowRight } from 'react-icons/md';
+import Link from 'next/link';
+import axios from 'axios';
 
 export default function page() {
-  const router = useRouter();
   const [data, setData] = useState();
-
   const getAllBlog = () => {
     axios
       .get("http://localhost:4000/api/all-blog")
@@ -22,31 +19,7 @@ export default function page() {
   useEffect(() => {
     getAllBlog();
   }, []);
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    console.log(token);
-    if (!token) {
-      router.push("/admin");
-      console.log(token, "out");
-    } else {
-      const header = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      axios
-        .post("http://localhost:4000/api/verify-token", {}, header)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          router.push("/admin");
-          console.log(error);
-        });
-    }
-  }, []);
-
-  const handleEditBlog  = (v) => {
+  const handleEditBlog = (v) => {
     localStorage.setItem("blog", JSON.stringify(v));
   };
 
@@ -64,81 +37,74 @@ export default function page() {
   };
   return (
     <div>
-      <div className=" bg-[#16325B] py-4">
-        <div className="px-4 grid grid-cols-4">
-          <div>
-            <h3 className="px-4 text-2xl text-[#fcfcfc] pt-2">Top 10 Blog</h3>
-          </div>
-          <div className="col-span-3 ">
-            <div className=" w-full flex justify-end">
-              <div className=" h-[50px] w-[50px] rounded-full bg-[#fcfcfc]"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+   {/* <Layout/> */}
+   <Layout>
 
-      <div className="">
-        <div className=" grid grid-cols-4">
-          <div className="min-h-[84vh] bg-[#f2f2f2] ">
-            <ul>
-              <Link href="/admin/create-blog">
-                <li className="px-8 py-4 border-[#cccc] border-b-[1px] cursor-pointer text-[#444]">
-                  Create Blog
-                </li>
-              </Link>
-              <Link href="/admin/list-blog">
-                <li className="px-8 py-4 border-[#cccc] border-b-[1px] cursor-pointer text-[#444]">
-                  List Blog
-                </li>
-              </Link>
-            </ul>
+   <div className=" p-6">
+          <div className=" pb-4 flex ">
+            <AiTwotoneHome className=" text-[16px] text-secondary" />
+
+            <MdOutlineKeyboardDoubleArrowRight className=" text-primary mt-0.5 text-[16px]" />
+
+            <p className="text-primary text-sm mx-2"> List Blog</p>
           </div>
-          <div className=" col-span-3">
-            <table className=" w-full">
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Title</th>
-                  <th>Tag</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data?.map((v, i) => {
-                  return (
-                    <tr>
-                      <td className=" text-center">{i + 1}</td>
-                      <td className=" text-center">{v?.title}</td>
-                      <td className=" text-center">{v?.tag}</td>
-                      <td className=" text-center ">
-                        <Link
-                          href={{
-                            pathname: `/admin/edit-blog/${v?._id}`,
-                            query: v,
-                          }}
-                        >
-                          <MdModeEditOutline
-                            className=" mx-auto"
-                            onClick={() => handleEditBlog(v)}
-                          />{" "}
-                        </Link>
-                      </td>
-                      <td className=" text-center">
-                        <MdDelete
-                          className=" mx-auto"
-                          onClick={() => handleDelete(v)}
-                        />
-                      </td>
-                      {/* <td className=" flex justify-center text-center"><MdModeEditOutline/> </td> */}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <table className=" w-full">
+            <thead>
+              <tr className=" py-2 bg-secondary">
+                <th className=" text-[#fcfcfc] text-left px-4 py-2">
+                  S.No
+                </th>
+                <th className=" text-[#fcfcfc] text-left px-4 py-2">
+                  Title
+                </th>
+                <th className=" text-[#fcfcfc] text-left py-2">Tag</th>
+                <th className=" text-[#fcfcfc] text-center py-2">Edit</th>
+                <th className=" text-[#fcfcfc] text-center py-2">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.data?.map((v, i) => {
+                return (
+                  <tr className=" border  border-[#e7e7e7] boder-t-0">
+                    <td className=" text-left px-4 text-[#6f6f6f] text-sm py-2">
+                      {i + 1}
+                    </td>
+                    <td className=" text-left px-4 text-[#6f6f6f] text-sm text-ellipsis overflow-hidden w-[50%]">
+                      {v.title.length > 50
+                        ? v.title.substring(0, 50) + "..."
+                        : v.title}
+                    </td>
+                    <td className="text-left text-[#6f6f6f] text-sm ">
+                      {v?.tag}
+                    </td>
+                    <td className="text-left  ">
+                      <Link
+                        href={{
+                          pathname: `/admin/edit-blog/${v?._id}`,
+                          query: v,
+                        }}
+                      >
+                        <MdModeEditOutline
+                          className=" mx-auto text-primary hover:text-secondary cursor-pointer"
+                          onClick={() => handleEditBlog(v)}
+                        />{" "}
+                      </Link>
+                    </td>
+                    <td className=" text-center">
+                      <MdDelete
+                        className=" mx-auto text-primary hover:text-secondary cursor-pointer"
+                        onClick={() => handleDelete(v)}
+                      />
+                    </td>
+                    
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      </div>
+   </Layout>
+   
     </div>
-  );
+  )
 }
