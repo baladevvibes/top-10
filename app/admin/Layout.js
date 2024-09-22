@@ -16,6 +16,7 @@ export default function Layout({ children }) {
   const router = useRouter();
 
   const [profile, setProfile] = useState();
+  const [profileState,setProfileState]=useState(false)
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
@@ -42,7 +43,9 @@ export default function Layout({ children }) {
     }
   }, []);
 
-  console.log(profile);
+  const handleLogout= () =>{
+    sessionStorage.clear();
+  }
 
   return (
     <div>
@@ -54,11 +57,11 @@ export default function Layout({ children }) {
           </div>
           <div className="col-span-3 ">
             <div className=" w-full flex justify-end">
-              <div className=" relative">
-                <div className=" h-[40px] cursor-pointer flex justify-center bg-secondary  text-[#fcfcfc] text-2xl items-center w-[40px] rounded-full ">
+              {/* <div className=" relative">
+                <div onClick={()=>setProfileState(!profileState)} className=" h-[40px] cursor-pointer flex justify-center bg-secondary  text-[#fcfcfc] text-2xl items-center w-[40px] rounded-full ">
                   {profile?.name[0]}
                 </div>
-                <div className=" absolute right-2 rounded-lg  top-10 ">
+                {profileState ?  <div className=" absolute right-2 rounded-lg  top-10 ">
                   <div className=" bg-[#fcfcfc]">
                     <div className="text-sm cursor-pointer flex group hover:bg-secondary  px-4 py-2">
                       <FaUserCog className=" mr-2 text-[20px] text-primary group-hover:text-[#fcfcfc]" />{" "}
@@ -73,8 +76,9 @@ export default function Layout({ children }) {
                       </p>
                     </div>
                   </div>
-                </div>
-              </div>
+                </div> :null }
+              
+              </div> */}
             </div>
           </div>
         </div>
@@ -82,7 +86,19 @@ export default function Layout({ children }) {
       <div className="">
         <div className="flex w-[100%]">
           <div className="min-h-[84vh] bg-[#f2f2f2] w-[20%]">
+
+            <div className="mt-10   h-[150px] mx-auto bg-primary rounded-full w-[150px]">
+                  <img src="../Images/profile/profile.png" className=" border-secondary border-[4px]  h-[150px] mt-10 bg-primary rounded-full w-[150px] object-cover" alt="Profile"/>
+            </div>
+            <p className=" mt-[10px] capitalize text-primary  font-semibold text-center  mb-4 group-hover:text-secondary">
+                        {profile?.name}
+                      </p>
             <ul className=" ">
+              <Link href="/admin/dashboard">
+                <li className="px-8 bg-[#f2f2f2] hover:bg-secondary hover:text-[#fcfcfc] py-3 text-sm border-[#cccc] border-b-[1px] cursor-pointer text-[#444]">
+                  Dashboard
+                </li>
+              </Link>
               <Link href="/admin/create-blog">
                 <li className="px-8 bg-[#f2f2f2] hover:bg-secondary hover:text-[#fcfcfc] py-3 text-sm border-[#cccc] border-b-[1px] cursor-pointer text-[#444]">
                   Create Blog
@@ -91,6 +107,11 @@ export default function Layout({ children }) {
               <Link href="/admin/list-blog">
                 <li className="px-8 bg-[#f2f2f2] hover:bg-secondary hover:text-[#fcfcfc]  py-3 text-sm border-[#cccc] border-b-[1px] cursor-pointer text-[#444]">
                   List Blog
+                </li>
+              </Link>
+              <Link href="/admin" onClick={()=>localStorage.removeItem("token")}>
+                <li onClick={()=>localStorage.removeItem("token")} className="px-8 bg-[#f2f2f2] hover:bg-secondary hover:text-[#fcfcfc]  py-3 text-sm border-[#cccc] border-b-[1px] cursor-pointer text-[#444]">
+                  Logout
                 </li>
               </Link>
             </ul>

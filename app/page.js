@@ -40,7 +40,7 @@ const page = () => {
               <>
                 <Link
                   href={{
-                    pathname: `/blog/${v?.title.replace(/\s+/g, '-').toLowerCase()}-${v?._id}`,
+                    pathname: `/${v?.title.replace(/\s+/g, '-').toLowerCase()}-${v?._id}`,
                   }}
                 >
                   <div onClick={()=>handleEditBlog(v)}>

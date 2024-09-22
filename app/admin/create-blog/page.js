@@ -1,6 +1,8 @@
 "use client";
 import Editor from "@/components/Editor";
 import "../../style.css";
+import "../../responsive.css";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -19,13 +21,15 @@ export default function page() {
     title: "",
     tag: "",
     img: "",
-    schema: "",
+    schema: null,
+    meta_des: "",
   });
   const [error, setError] = useState({
     title: "",
     tag: "",
     img: "",
     schema: "",
+    meta_des: "",
   });
   const [readyStatus, setReadyStatus] = useState(false);
   const [formFirstAction, setFormFirstAction] = useState(true);
@@ -54,6 +58,13 @@ export default function page() {
     } else {
       error.tag = true;
     }
+    if (formData.meta_des === undefined) {
+      error.meta_des = "Enter the meta des";
+    } else if (formData.meta_des === "") {
+      error.meta_des = "Enter the meta des";
+    } else {
+      error.meta_des = true;
+    }
     if (formData.img === undefined) {
       error.img = "Choose the img";
     } else if (formData.img === "") {
@@ -65,11 +76,18 @@ export default function page() {
 
   console.log(data.blocks?.length === 0);
   const handleSubmit = () => {
-    alert(JSON.stringify(data));
+    const newSchema = {
+      schema: JSON.stringify(formData.schema),
+      meta_des: formData.meta_des,
+      title: formData.title,
+    };
     const newblog = {
       blog: data,
       title: formData.title,
       tag: formData.tag,
+      schema: newSchema,
+      meta_des: formData.meta_des,
+      img: imgs,
     };
 
     axios
@@ -127,9 +145,9 @@ export default function page() {
 
   return (
     <div>
-      <div className=" editorjs-container">
+      <div className=" editorjs-container px-6">
         {blogState ? null : (
-          <div className=" py-10 w-[50%] mx-auto">
+          <div className=" py-10 lg:w-[50%] lge:w-[50%] md:w-[100%] mdsm:w-[100%] sm:w-[100%] mx-auto">
             <h3 className=" text-3xl font-semibold pb-4 text-primary">
               Create Blog
             </h3>
@@ -141,7 +159,27 @@ export default function page() {
                 onChange={(e) => handleChange(e)}
                 className="my-2 py-2 px-4  border border-[#ccc] focus:outline-none w-full"
               />
-              {readyStatus ? <> {error.title} </> : null}
+              {readyStatus ? (
+                <>
+                  {" "}
+                  <p className=" text-sm text-secondary"> {error.title}</p>{" "}
+                </>
+              ) : null}
+            </div>
+
+            <div>
+              <textarea
+                type="text"
+                name="meta_des"
+                placeholder="Meta"
+                onChange={(e) => handleChange(e)}
+                className="my-2 py-2 border border-[#ccc]  focus:outline-none px-4 w-full"
+              />
+              {readyStatus ? (
+                <>
+                  <p className=" text-sm text-secondary"> {error.meta_des}</p>{" "}
+                </>
+              ) : null}
             </div>
             <div>
               <input
@@ -151,7 +189,12 @@ export default function page() {
                 onChange={(e) => handleChange(e)}
                 className="my-2 py-2 border border-[#ccc]  focus:outline-none px-4 w-full"
               />
-              {readyStatus ? <> {error.tag} </> : null}
+              {readyStatus ? (
+                <>
+                  {" "}
+                  <p className=" text-sm text-secondary">{error.tag}</p>{" "}
+                </>
+              ) : null}
             </div>
             <input
               type="file"
@@ -164,10 +207,16 @@ export default function page() {
               id="img2"
               onChange={handleImage}
             />
-            <div>{readyStatus ? <> {error.img} </> : null}</div>
+            <div>
+              {readyStatus ? (
+                <>
+                  <p className=" text-sm text-secondary"> {error.img}</p>{" "}
+                </>
+              ) : null}
+            </div>
 
             <div>
-              <input
+              <textarea
                 type="text"
                 name="schema"
                 placeholder="Schema"
